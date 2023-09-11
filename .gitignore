@@ -277,3 +277,6 @@ $RECYCLE.BIN/
 # AppSettings files
 appsettings.json
 appsettings.*.json
+
+# vs file
+.vs
