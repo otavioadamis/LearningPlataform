@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  learningplataform.api: 
+    depends_on:
+        - "app_db"
+    container_name: learningplataform.api
+    ports:
+        - "8081:80"
+    build:
+        context: .
+        dockerfile: ./LearningPlataform.API/Dockerfile
+    networks:
+        - learningappNet
+  
+  app_db:
+    image: postgres:15.4
+    container_name: app_db
+    environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=1234
+        - POSTGRES_DB=learningplataform
+    ports:
+        - "5433:5432"
+    restart: always
+    volumes:
+        - app_data:/var/lib/postgresql/data
+    networks:
+        - learningappNet
+
+volumes:
+    app_data:
+    
+networks:
+    learningappNet:

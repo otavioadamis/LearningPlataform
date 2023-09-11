@@ -30,7 +30,6 @@ namespace LearningPlataform.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
@@ -44,7 +43,6 @@ namespace LearningPlataform.API
             builder.Services.AddScoped<IInstructorLessonService, InstructorLessonService>();
 
             var app = builder.Build();
-
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -60,9 +58,18 @@ namespace LearningPlataform.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-
-
             app.MapControllers();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                var context = services.GetRequiredService<AppDbContext>();
+                if (context.Database.GetPendingMigrations().Any())
+                {
+                    context.Database.Migrate();
+                }
+            }
 
             app.Run();
         }
