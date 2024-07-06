@@ -8,12 +8,8 @@ using System.Threading.Tasks;
 
 namespace LearningPlataform.Domain.Interfaces
 {
-    public interface ICourseRepository
+    public interface ICourseService
     {
-        public Course Add(Course thisCourse);
         public List<CourseResponseDTO> GetAll();
-        public Course GetById(string _id);
-        public void SaveChanges();
-        public void Delete(string _id);
     }
 }

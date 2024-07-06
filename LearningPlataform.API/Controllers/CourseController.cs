@@ -8,16 +8,25 @@ using Microsoft.AspNetCore.Mvc;
 namespace LearningPlataform.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CourseController : ControllerBase
     {
         private readonly IInstructorCourseService _InstructorCourseService;
         private readonly IStudentCourseService _StudentCourseService;
+        private readonly ICourseService _CourseService;
 
-        public CourseController(IInstructorCourseService instructorCourseService, IStudentCourseService studentCourseService)
+        public CourseController(IInstructorCourseService instructorCourseService, IStudentCourseService studentCourseService, ICourseService courseService)
         {
             _InstructorCourseService = instructorCourseService;
             _StudentCourseService = studentCourseService;
+            _CourseService = courseService;
+        }
+
+        [HttpGet]
+        public ActionResult<List<CourseResponseDTO>> GetAll()
+        {
+            var allCourses = _CourseService.GetAll();
+            return Ok(allCourses);
         }
 
         [CustomAuthorize(Role.Instructor)]

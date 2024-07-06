@@ -1,6 +1,7 @@
 ﻿using LearningPlataform.Dal.Data;
 using LearningPlataform.Domain.Interfaces;
 using LearningPlataform.Domain.Models;
+using LearningPlataform.Domain.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,17 @@ namespace LearningPlataform.Dal
             _dbContext.Courses.Remove(course);
         }
 
-        public List<Course> Get()
+        public List<CourseResponseDTO> GetAll()
         {
-            var allCourses = _dbContext.Courses.ToList();
+            var allCourses = (from course in _dbContext.Courses
+                              select new CourseResponseDTO
+                              {
+                                  Id = course.Id,
+                                  Category = course.Category,
+                                  Description = course.Description,
+                                  InstructorId = course.InstructorId,
+                                  Title = course.Title,
+                              }).ToList();
             return allCourses;
         }
 

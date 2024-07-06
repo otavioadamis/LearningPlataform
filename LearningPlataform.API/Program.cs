@@ -1,4 +1,3 @@
-
 using LearningPlataform.API.Authorization;
 using LearningPlataform.API.Helpers;
 using LearningPlataform.Dal;
@@ -6,6 +5,7 @@ using LearningPlataform.Dal.Data;
 using LearningPlataform.Domain.Interfaces;
 using LearningPlataform.Service;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 namespace LearningPlataform.API
 {
@@ -41,10 +41,49 @@ namespace LearningPlataform.API
             builder.Services.AddScoped<IInstructorCourseService, InstructorCourseService>();
             builder.Services.AddScoped<IStudentCourseService, StudentCourseService>();
             builder.Services.AddScoped<IInstructorLessonService, InstructorLessonService>();
+            builder.Services.AddScoped<ICourseService, CourseService>();
+
+            // Configurando swagger para usar Token jwt de Auth
+
+            builder.Services.AddSwaggerGen(
+                options =>
+                {
+                    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                    {
+                        In = ParameterLocation.Header,
+                        Description = "Insert Token",
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.Http,
+                        BearerFormat = "JWT",
+                        Scheme = "bearer"
+                    });
+
+                    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
+                });
+
+            builder.Services.AddCors();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            app.UseCors(x => x
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .SetIsOriginAllowed(origin => true)
+            .AllowCredentials());
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

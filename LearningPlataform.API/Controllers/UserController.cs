@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LearningPlataform.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
 
